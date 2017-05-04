@@ -17,10 +17,50 @@
 #include <string.h>
 
 /**
+ * @brief Read a line of input from stdin.
+ * @return The line from stdin.
+ */
+char *lsh_read_line(void) {
+  // TODO
+  return "foo";
+}
+
+/**
+ * @brief (Niavely) split a line into tokens.
+ * @param line The line.
+ * @return NULL-terminated array of tokens.
+ */
+/*char **lsh_split_line(char *line) {
+  // TODO
+}*/
+
+/**
+ * @brief Execute shell built-in or launch program.
+ * @param args NULL-terminated list of arguments.
+ * @return 1 if the shell should continue running, or 0 if it should terminate.
+ */
+int lsh_execute(char **args) {
+  // TODO
+  return 0;
+}
+
+/**
  * @brief Loop, getting input and then executing it.
  */
 void lsh_loop(void) {
-  // TODO
+  char *line;
+  char **args;
+  int status;
+
+  do {
+    printf("> ");
+    //line = lsh_read_line();
+    //args = lsh_split_line(line);
+    //status = lsh_execute(args);
+    status = 0; // TODO: Remove this!
+    //free(line);
+    //free(args);
+  } while(status);
 }
 
 /**
