@@ -130,8 +130,26 @@ int lsh_launch(char **args) {
  * @return 1 if the shell should continue running, or 0 if it should terminate.
  */
 int lsh_execute(char **args) {
-  // TODO
-  return 0;
+  int i;
+
+  if (args[0] == NULL) {
+    // An empty command was entered, so do nothing and let the shell
+    // continue executing.
+    return 1;
+  }
+
+  // Search through the list of shell builtins.
+  // If args[0] is in the list, execute the corrosponding function, and return
+  // the result.
+  for (i = 0; i < lsh_num_builtins(); i++) {
+    if (strcmp(args[0], builtin_str[i]) == 0) {
+      return (*builtin_func[i])(args);
+    }
+  }
+
+  // If we're at this point, then args[0] wasn't in the list of shell builtins.
+  // Pass off args to lsh_launch, and return the result.
+  return lsh_launch(args);
 }
 
 #define LSH_RL_BUFSIZE 1024
@@ -234,8 +252,8 @@ void lsh_loop(void) {
     printf("> ");
     line = lsh_read_line();
     args = lsh_split_line(line);
-    //status = lsh_execute(args);
-    status = 0; // TODO: Remove this!
+    status = lsh_execute(args);
+
     free(line);
     free(args);
   } while(status);
