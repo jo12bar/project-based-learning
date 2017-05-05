@@ -16,6 +16,16 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * @brief Execute shell built-in or launch program.
+ * @param args NULL-terminated list of arguments.
+ * @return 1 if the shell should continue running, or 0 if it should terminate.
+ */
+int lsh_execute(char **args) {
+  // TODO
+  return 0;
+}
+
 #define LSH_RL_BUFSIZE 1024
 /**
  * @brief Read a line of input from stdin.
@@ -102,16 +112,6 @@ char **lsh_split_line(char *line) {
   tokens[position] = NULL;
 
   return tokens;
-}
-
-/**
- * @brief Execute shell built-in or launch program.
- * @param args NULL-terminated list of arguments.
- * @return 1 if the shell should continue running, or 0 if it should terminate.
- */
-int lsh_execute(char **args) {
-  // TODO
-  return 0;
 }
 
 /**
