@@ -13,6 +13,7 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [Go](#go)
 * [Ruby](#ruby)
 * [Haskell](#haskell)
+* [PHP](#php)
 * [R](#r)
 * [Rust](#rust)
 * [Additional resources](#additional-resources)
@@ -37,20 +38,30 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [Build a Spring Boot App with User Authentication](https://scotch.io/tutorials/build-a-spring-boot-app-with-user-authentication)
 
 ## JavaScript:
+### Mobile Application:
+* [Build a React Native Todo Application](https://egghead.io/courses/build-a-react-native-todo-application)
+
 ### Web Applications:
+#### React:
 * [Create Serverless React.js Apps](http://serverless-stack.com/)
 * [Create a Trello Clone](http://codeloveandboards.com/blog/2016/01/04/trello-tribute-with-phoenix-and-react-pt-1/)
 * [Create a Character Voting App with React, Node, MongoDB and SocketIO](http://sahatyalkabov.com/create-a-character-voting-app-using-react-nodejs-mongodb-and-socketio/)
 * [Build a Full Stack Movie Voting App with Test-First Development using Mocha, React, Redux and Immutable](https://teropa.info/blog/2015/09/10/full-stack-redux-tutorial.html)
-* [Build a URL Shortener with Node, MongoDB and Hapi.js](https://www.codetuts.tech/build-a-url-shortener-node-hapi-js/?utm_source=mybridge&utm_medium=blog&utm_campaign=read_more)
-* [Build an Instagram Clone](https://hackhands.com/building-instagram-clone-angularjs-satellizer-nodejs-mongodb/)
-* [Build a real-time Markdown Editor with NodeJS](https://scotch.io/tutorials/building-a-real-time-markdown-viewer)
 * Build a Serverless MERN Story App with Webtask.io
     * [Part 1](https://scotch.io/tutorials/build-a-serverless-mern-story-app-with-webtask-io-zero-to-deploy-1)
     * [Part 2](https://scotch.io/tutorials/build-a-serverless-mern-story-app-with-webtask-io-zero-to-deploy-2)
+#### Angular:
+* [Build an Instagram Clone](https://hackhands.com/building-instagram-clone-angularjs-satellizer-nodejs-mongodb/)
 * Build an offline-capable Hacker News client with Angular 2+
     * [Part 1](https://houssein.me/angular2-hacker-news)
     * [Part 2](https://houssein.me/progressive-angular-applications)
+#### Others (Node, Hapi, Express...):
+* [Build a URL Shortener with Node, MongoDB and Hapi.js](https://www.codetuts.tech/build-a-url-shortener-node-hapi-js/?utm_source=mybridge&utm_medium=blog&utm_campaign=read_more)
+* [Build a real-time Markdown Editor with NodeJS](https://scotch.io/tutorials/building-a-real-time-markdown-viewer)
+* Build a Progressive Web Application (PWA)
+    * [Part 1](https://bitsofco.de/bitsofcode-pwa-part-1-offline-first-with-service-worker/)
+    * [Part 2](https://bitsofco.de/bitsofcode-pwa-part-2-instant-loading-with-indexeddb/)
+    * [Part 3](https://bitsofco.de/bitsofcode-pwa-part-3-push-notifications/)
 ### Game Development:
 * [Make 2D Breakout Game using Phaser](https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_breakout_game_Phaser)
 * Make Flappy Bird in HTML5 and JavaScript with Phaser
@@ -63,6 +74,7 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
     * [Part 3](https://scotch.io/tutorials/build-a-music-player-with-react-electron-iii-bringing-it-all-together)
 ### Miscellaneous:
 * [How to Build a Web Framework in Less Than 20 Lines of Code](https://www.pubnub.com/blog/build-yourself-a-web-framework-in-less-than-20-lines-of-code/)
+* [Build Yourself a Redux](https://zapier.com/engineering/how-to-build-redux/)
 
 ## Python:
 ### Web Scraping:
@@ -78,6 +90,7 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [How to Make a Reddit Bot - YouTube](https://www.youtube.com/watch?v=krTUf7BpTc0)
 * [Build a Facebook Messenger Bot](https://blog.hartleybrody.com/fb-messenger-bot/)
 * [Making a Reddit + Facebook Messenger Bot](https://pythontips.com/2017/04/13/making-a-reddit-facebook-messenger-bot/)
+* [How To Create a Telegram Bot Using Python](https://khashtamov.com/en/how-to-create-a-telegram-bot-using-python/)
 ### Miscellaneous:
 * [Build a Simple Interpreter](https://ruslanspivak.com/lsbasi-part1/)
 * [Write a NoSQL Database in Python](https://jeffknupp.com/blog/2014/09/01/what-is-a-nosql-database-learn-by-writing-one-in-python/)
@@ -87,6 +100,9 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [Create a Real Time Chat App with Golang, Angular 2, and WebSocket](https://www.thepolyglotdeveloper.com/2016/12/create-real-time-chat-app-golang-angular-2-websockets/)
 * [Building Go Web Applications and Microservices Using Gin](https://semaphoreci.com/community/tutorials/building-go-web-applications-and-microservices-using-gin)
 * [How to Use Godog for Behavior-driven Development in Go et started with Godog](https://semaphoreci.com/community/tutorials/how-to-use-godog-for-behavior-driven-development-in-go)
+
+## PHP
+* [How To Build A Blog With Laravel](https://www.youtube.com/playlist?list=PLwAKR305CRO-Q90J---jXVzbOd4CDRbVx)
 
 ## Ruby:
 * [Build Instagram From Scratch with Ruby on Rails](https://www.dropbox.com/s/9vq430e9s3q7pu8/Let%27s%20Build%20Instagram%20with%20Ruby%20on%20Rails%20-%20Free%20Edition.pdf?dl=0)
@@ -101,7 +117,7 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [Making Movie Monad](https://lettier.github.io/posts/2016-08-15-making-movie-monad.html)
 
 ## R:
-* [Build Web Apps with Shiny](http://rstudio.github.io/shiny/tutorial/)
+* [Build Web Apps with Shiny](http://shiny.rstudio.com/tutorial/)
 
 ## Rust:
 * A Simple Web App in Rust
@@ -116,3 +132,4 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [Node School](https://nodeschool.io/)
 * [ScotchIO](https://scotch.io/)
 * [Exercism](http://www.exercism.io/)
+* [Egghead.io](http://www.egghead.io/)
