@@ -115,6 +115,17 @@ char editorReadKey() {
 /*** OUTPUT ***/
 
 /**
+ * Draw a column of tildes along the left hand side of the screen.
+ */
+void editorDrawRows() {
+  int i;
+
+  for (i = 0; i < 24; i++) {
+    write(STDOUT_FILENO, "~\r\n", 3);
+  }
+}
+
+/**
  * @brief Refresh (re-render) the screen.
  */
 void editorRefreshScreen() {
@@ -122,6 +133,10 @@ void editorRefreshScreen() {
   write(STDOUT_FILENO, "\x1b[2J", 4);
 
   // Position the cursor at the top left
+  write(STDOUT_FILENO, "\x1b[H", 3);
+
+  editorDrawRows();
+
   write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
