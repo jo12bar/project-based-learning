@@ -14,9 +14,19 @@
 /*** DATA ***/
 
 /**
- * @brief The original attributes for termios
+ * @brief Global editor config struct.
  */
-struct termios orig_termios;
+struct editorConfig {
+  /**
+   * @brief The original attributes for termios
+   */
+  struct termios orig_termios;
+};
+
+/**
+ * @brief Main instance of editorConfig.
+ */
+struct editorConfig E;
 
 /*** TERMINAL ***/
 
@@ -39,7 +49,7 @@ void die(const char *s) {
  * @brief Reset the terminal's attributes so that the user's shell isn't broken.
  */
 void disableRawMode() {
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1) {
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1) {
     die("tcsetattr");
   }
 }
@@ -50,11 +60,11 @@ void disableRawMode() {
 void enableRawMode() {
   // Save the terminal's original attributes, and reset them on exit (so that
   // the user's shell doesn't break).
-  if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) die("tcgetattr");
+  if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1) die("tcgetattr");
   atexit(disableRawMode);
 
   // Copy of the terminal's attributes to be modified.
-  struct termios raw = orig_termios;
+  struct termios raw = E.orig_termios;
 
   raw.c_iflag &= ~(
       // Keep break conditions from sending SIGINT.
