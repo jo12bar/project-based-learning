@@ -25,6 +25,12 @@ struct termios orig_termios;
  * @param s The error message
  */
 void die(const char *s) {
+  // Clear the screen
+  write(STDOUT_FILENO, "\x1b[2J", 4);
+
+  // Position the cursor at the top left
+  write(STDOUT_FILENO, "\x1b[H", 3);
+
   perror(s);
   exit(1);
 }
@@ -106,6 +112,19 @@ char editorReadKey() {
   return c;
 }
 
+/*** OUTPUT ***/
+
+/**
+ * @brief Refresh (re-render) the screen.
+ */
+void editorRefreshScreen() {
+  // Clear the screen
+  write(STDOUT_FILENO, "\x1b[2J", 4);
+
+  // Position the cursor at the top left
+  write(STDOUT_FILENO, "\x1b[H", 3);
+}
+
 /*** INPUT ***/
 
 /**
@@ -116,6 +135,12 @@ void editorProcessKeypress() {
 
   switch (c) {
     case CTRL_KEY('q'):
+      // Clear the screen
+      write(STDOUT_FILENO, "\x1b[2J", 4);
+
+      // Position the cursor at the top left
+      write(STDOUT_FILENO, "\x1b[H", 3);
+
       exit(0);
       break;
   }
@@ -130,6 +155,7 @@ int main() {
   enableRawMode();
 
   while (1) {
+    editorRefreshScreen();
     editorProcessKeypress();
   }
 
