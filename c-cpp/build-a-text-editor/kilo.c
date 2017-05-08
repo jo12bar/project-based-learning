@@ -1,3 +1,5 @@
+/*** INCLUDES ***/
+
 #include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
@@ -5,10 +7,14 @@
 #include <termios.h>
 #include <unistd.h>
 
+/*** DATA ***/
+
 /**
  * @brief The original attributes for termios
  */
 struct termios orig_termios;
+
+/*** TERMINAL ***/
 
 /**
  * @brief Print an error message and exit the program.
@@ -80,6 +86,8 @@ void enableRawMode() {
   // Tell the terminal to use our modified attributes.
   if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) die("tcsetattr");
 }
+
+/*** INIT ***/
 
 /**
  * @brief Main entry point.
