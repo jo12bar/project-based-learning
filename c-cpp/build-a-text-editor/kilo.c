@@ -28,8 +28,14 @@ void enableRawMode() {
   // Copy of the terminal's attributes to be modified.
   struct termios raw = orig_termios;
 
-  // Turn off echoing and canonical mode.
-  raw.c_lflag &= ~(ECHO | ICANON);
+  raw.c_lflag &= ~(
+      // Turn off echoing
+      ECHO
+      // Turn off canonical mode (read input a byte at a time)
+      | ICANON
+      // Ignore signals like SIGINT (Ctrl-C) & SIGTSTP (Ctrl-Z / Ctrl-Y)
+      | ISIG
+  );
 
   // Tell the terminal to use our modified attributes.
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
