@@ -29,15 +29,24 @@ void enableRawMode() {
   struct termios raw = orig_termios;
 
   raw.c_iflag &= ~(
+      // Keep break conditions from sending SIGINT.
+      BRKINT
       // Ensure that carriage returns (13, '\r') aren't automatically translated
       // into newlines (10, '\n'). This fixes Ctrl-M.
-      ICRNL
+      | ICRNL
+      // Disable parity checking.
+      | INPCK
+      // Prevent the 8th bit of every input byte from being stripped.
+      | ISTRIP
       // Ignore XOFF (Ctrl-S) & XON (Ctrl-Q)
       | IXON
   );
 
   // Ignore all output processing.
   raw.c_oflag &= ~(OPOST);
+
+  // Set the character size to 8 bits per byte.
+  raw.c_cflag |= (CS8);
 
   raw.c_lflag &= ~(
       // Turn off echoing
