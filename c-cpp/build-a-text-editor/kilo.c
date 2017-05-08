@@ -28,11 +28,21 @@ void enableRawMode() {
   // Copy of the terminal's attributes to be modified.
   struct termios raw = orig_termios;
 
+  raw.c_iflag &= ~(
+      // Ensure that carriage returns (13, '\r') aren't automatically translated
+      // into newlines (10, '\n'). This fixes Ctrl-M.
+      ICRNL
+      // Ignore XOFF (Ctrl-S) & XON (Ctrl-Q)
+      | IXON
+  );
+
   raw.c_lflag &= ~(
       // Turn off echoing
       ECHO
       // Turn off canonical mode (read input a byte at a time)
       | ICANON
+      // Ignore the effects of Ctrl-V
+      | IEXTEN
       // Ignore signals like SIGINT (Ctrl-C) & SIGTSTP (Ctrl-Z / Ctrl-Y)
       | ISIG
   );
