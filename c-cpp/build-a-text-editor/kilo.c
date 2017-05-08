@@ -26,8 +26,8 @@ void enableRawMode() {
   // Copy of the terminal's attributes to be modified.
   struct termios raw = orig_termios;
 
-  // Turn off echoing.
-  raw.c_lflag &= ~(ECHO);
+  // Turn off echoing and canonical mode.
+  raw.c_lflag &= ~(ECHO | ICANON);
 
   // Tell the terminal to use our modified attributes.
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
