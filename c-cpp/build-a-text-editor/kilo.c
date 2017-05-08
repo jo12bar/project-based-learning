@@ -59,6 +59,12 @@ void enableRawMode() {
       | ISIG
   );
 
+  // Force read() to return after recieving more than 0 bytes.
+  raw.c_cc[VMIN] = 0;
+
+  // Force read() to return after 1/10th of a second (100ms)
+  raw.c_cc[VTIME] = 1;
+
   // Tell the terminal to use our modified attributes.
   tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
@@ -69,13 +75,17 @@ void enableRawMode() {
 int main() {
   enableRawMode();
 
-  char c;
-  while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q') {
+  while (1) {
+    char c = '\0';
+    read(STDIN_FILENO, &c, 1);
+
     if (iscntrl(c)) {
       printf("%d\r\n", c);
     } else {
       printf("%d ('%c')\r\n", c, c);
     }
+
+    if (c == 'q') break;
   }
 
   return 0;
