@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -17,6 +18,16 @@
  * @brief Global editor config struct.
  */
 struct editorConfig {
+  /**
+   * @brief The height of the window in rows.
+   */
+  int screenrows;
+
+  /**
+   * @brief The width of the window in columns.
+   */
+  int screencols;
+
   /**
    * @brief The original attributes for termios
    */
@@ -122,6 +133,25 @@ char editorReadKey() {
   return c;
 }
 
+/**
+ * @brief Get current window size in rows and columns.
+ * @param rows Pointer to the number of rows
+ * @param cols Pointer to the number of columns
+ * @return -1 if failed (rows & cols will not be set), 0 if success (rows & cols
+ *         will be set)
+ */
+int getWindowSize(int *rows, int *cols) {
+  struct winsize ws;
+
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
+    return -1;
+  } else {
+   *cols = ws.ws_col;
+   *rows = ws.ws_row;
+   return 0;
+  }
+}
+
 /*** OUTPUT ***/
 
 /**
@@ -130,7 +160,7 @@ char editorReadKey() {
 void editorDrawRows() {
   int i;
 
-  for (i = 0; i < 24; i++) {
+  for (i = 0; i < E.screenrows; i++) {
     write(STDOUT_FILENO, "~\r\n", 3);
   }
 }
@@ -174,10 +204,18 @@ void editorProcessKeypress() {
 /*** INIT ***/
 
 /**
+ * @brief Initialize various properties of the editor.
+ */
+void initEditor() {
+  if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
+}
+
+/**
  * @brief Main entry point.
  */
 int main() {
   enableRawMode();
+  initEditor();
 
   while (1) {
     editorRefreshScreen();
