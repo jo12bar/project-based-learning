@@ -252,6 +252,9 @@ void editorRefreshScreen() {
   // end of this function.
   struct abuf ab = ABUF_INIT;
 
+  // Hide the cursor (in supported terminals).
+  abAppend(&ab, "\x1b[?25l", 6);
+
   // Clear the screen
   abAppend(&ab, "\x1b[2J", 4);
 
@@ -261,6 +264,9 @@ void editorRefreshScreen() {
   editorDrawRows(&ab);
 
   abAppend(&ab, "\x1b[H", 3);
+
+  // Reshow the cursor (again, in supported terminals).
+  abAppend(&ab, "\x1b[?25h", 6);
 
   // Write the draw buffer to stdout, and free it from memory.
   write(STDOUT_FILENO, ab.b, ab.len);
