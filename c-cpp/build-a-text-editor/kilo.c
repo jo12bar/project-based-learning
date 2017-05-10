@@ -236,6 +236,9 @@ void editorDrawRows(struct abuf *ab) {
   for (i = 0; i < E.screenrows; i++) {
     abAppend(ab, "~", 1);
 
+    // Clear the row.
+    abAppend(ab, "\x1b[K", 3);
+
     // Write \r\n on every line *except* the last one (to prevent the terminal
     // from scrolling & hiding the topmost tilde).
     if (i < E.screenrows - 1) {
@@ -254,9 +257,6 @@ void editorRefreshScreen() {
 
   // Hide the cursor (in supported terminals).
   abAppend(&ab, "\x1b[?25l", 6);
-
-  // Clear the screen
-  abAppend(&ab, "\x1b[2J", 4);
 
   // Position the cursor at the top left
   abAppend(&ab, "\x1b[H", 3);
