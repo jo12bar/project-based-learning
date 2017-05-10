@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
@@ -178,21 +179,67 @@ int getWindowSize(int *rows, int *cols) {
   }
 }
 
+/*** APPEND BUFFER ***/
+
+/**
+ * @brief Appendable buffer of chars (a.k.a. a dynamic string).
+ */
+struct abuf {
+  /**
+   * @brief Pointer to the buffer in memory.
+   */
+  char *b;
+
+  /**
+   * @brief Length of the buffer.
+   */
+  int len;
+};
+
+/**
+ * @brief An empty abuf (appendable buffer).
+ */
+#define ABUF_INIT { NULL, 0 }
+
+/**
+ * @brief Append a string of char's to an instance of abuf.
+ * @param abuf A pointer to the appendable buffer.
+ * @param s The string of char's to be appended.
+ * @param len The length of the string to be appended.
+ */
+void abAppend(struct abuf *ab, const char *s, int len) {
+  char *new = realloc(ab->b, ab->len + len);
+
+  if (new == NULL) return;
+
+  memcpy(&new[ab->len], s, len);
+  ab->b = new;
+  ab->len += len;
+}
+
+/**
+ * @brief Free an appendable buffer from memory.
+ */
+void abFree(struct abuf *ab) {
+  free(ab->b);
+}
+
 /*** OUTPUT ***/
 
 /**
- * Draw a column of tildes along the left hand side of the screen.
+ * @brief Draw a column of tildes along the left hand side of the screen.
+ * @param abuf Appendable buffer to draw to.
  */
-void editorDrawRows() {
+void editorDrawRows(struct abuf *ab) {
   int i;
 
   for (i = 0; i < E.screenrows; i++) {
-    write(STDOUT_FILENO, "~", 1);
+    abAppend(ab, "~", 1);
 
     // Write \r\n on every line *except* the last one (to prevent the terminal
     // from scrolling & hiding the topmost tilde).
     if (i < E.screenrows - 1) {
-      write(STDOUT_FILENO, "\r\n", 2);
+      abAppend(ab, "\r\n", 2);
     }
   }
 }
@@ -201,15 +248,23 @@ void editorDrawRows() {
  * @brief Refresh (re-render) the screen.
  */
 void editorRefreshScreen() {
+  // All write() operations will be stored in this buffer, to be drawn at the
+  // end of this function.
+  struct abuf ab = ABUF_INIT;
+
   // Clear the screen
-  write(STDOUT_FILENO, "\x1b[2J", 4);
+  abAppend(&ab, "\x1b[2J", 4);
 
   // Position the cursor at the top left
-  write(STDOUT_FILENO, "\x1b[H", 3);
+  abAppend(&ab, "\x1b[H", 3);
 
-  editorDrawRows();
+  editorDrawRows(&ab);
 
-  write(STDOUT_FILENO, "\x1b[H", 3);
+  abAppend(&ab, "\x1b[H", 3);
+
+  // Write the draw buffer to stdout, and free it from memory.
+  write(STDOUT_FILENO, ab.b, ab.len);
+  abFree(&ab);
 }
 
 /*** INPUT ***/
