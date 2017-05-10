@@ -187,7 +187,13 @@ void editorDrawRows() {
   int i;
 
   for (i = 0; i < E.screenrows; i++) {
-    write(STDOUT_FILENO, "~\r\n", 3);
+    write(STDOUT_FILENO, "~", 1);
+
+    // Write \r\n on every line *except* the last one (to prevent the terminal
+    // from scrolling & hiding the topmost tilde).
+    if (i < E.screenrows - 1) {
+      write(STDOUT_FILENO, "\r\n", 2);
+    }
   }
 }
 
