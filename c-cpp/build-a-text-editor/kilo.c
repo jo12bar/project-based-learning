@@ -236,7 +236,7 @@ void editorDrawRows(struct abuf *ab) {
   for (i = 0; i < E.screenrows; i++) {
     abAppend(ab, "~", 1);
 
-    // Clear the row.
+    // Clear the row to the right of the cursor.
     abAppend(ab, "\x1b[K", 3);
 
     // Write \r\n on every line *except* the last one (to prevent the terminal
