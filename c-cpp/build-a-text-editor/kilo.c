@@ -15,12 +15,28 @@
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
+/**
+ * @brief Control keys, such as arrow keys, for the editor.
+ */
+enum editorKey {
+  ARROW_LEFT = 1000,
+  ARROW_RIGHT,
+  ARROW_UP,
+  ARROW_DOWN
+};
+
 /*** DATA ***/
 
 /**
  * @brief Global editor config struct.
  */
 struct editorConfig {
+  /** @brief Cursor x position (column). */
+  int cx;
+
+  /** @brief Cursor y position (row). */
+  int cy;
+
   /**
    * @brief The height of the window in rows.
    */
@@ -125,7 +141,7 @@ void enableRawMode() {
  * @brief Read keypresses from stdin.
  * @return The character read.
  */
-char editorReadKey() {
+int editorReadKey() {
   int nread;
   char c;
 
@@ -133,7 +149,32 @@ char editorReadKey() {
     if (nread == -1 && errno != EAGAIN) die("read");
   }
 
-  return c;
+  // Handle escape sequences (i.e. <Home>, <Up>, <Right>, <Delete>...)
+  if (c == '\x1b') {
+    char seq[3];
+
+    // If there aren't at least two more characters after <Escape> (like you
+    // typically need in escape sequences - i.e. "<Escape>[A") then just return
+    // <Escape>.
+    if (read(STDIN_FILENO, &seq[0], 1) != 1) return '\x1b';
+    if (read(STDIN_FILENO, &seq[1], 1) != 1) return '\x1b';
+
+    // Most (if not all) escape sequences need an '[' right after the <Escape>.
+    if (seq[0] == '[') {
+      // Alias arrow keys to ARROW_UP, ARROW_DOWN, ARROW_RIGHT, & ARROW_LEFT.
+      switch (seq[1]) {
+        case 'A': return ARROW_UP;
+        case 'B': return ARROW_DOWN;
+        case 'C': return ARROW_RIGHT;
+        case 'D': return ARROW_LEFT;
+      }
+    }
+
+    // Give up and just return <Escape>.
+    return '\x1b';
+  } else {
+    return c;
+  }
 }
 
 /**
@@ -293,7 +334,10 @@ void editorRefreshScreen() {
 
   editorDrawRows(&ab);
 
-  abAppend(&ab, "\x1b[H", 3);
+  // Move cursor to position set in the global editor state.
+  char buf[32];
+  snprintf(buf, sizeof(buf), "\x1b[%d;%dH", E.cy + 1, E.cx + 1);
+  abAppend(&ab, buf, strlen(buf));
 
   // Reshow the cursor (again, in supported terminals).
   abAppend(&ab, "\x1b[?25h", 6);
@@ -306,12 +350,38 @@ void editorRefreshScreen() {
 /*** INPUT ***/
 
 /**
+ * @brief Increment or decrement either E.cx or E.cy, based on the char passed.
+ * @param key The key pressed. Is mapped ARROW_UP, ARROW_DOWN, ARROW_LEFT, and
+ *            ARROW_RIGHT.
+ */
+void editorMoveCursor(int key) {
+  switch (key) {
+    case ARROW_LEFT:
+      E.cx--;
+      break;
+
+    case ARROW_RIGHT:
+      E.cx++;
+      break;
+
+    case ARROW_UP:
+      E.cy--;
+      break;
+
+    case ARROW_DOWN:
+      E.cy++;
+      break;
+  }
+}
+
+/**
  * @brief Process keypresses recieved from editorReadKey()
  */
 void editorProcessKeypress() {
-  char c = editorReadKey();
+  int c = editorReadKey();
 
   switch (c) {
+    // Quit
     case CTRL_KEY('q'):
       // Clear the screen
       write(STDOUT_FILENO, "\x1b[2J", 4);
@@ -320,6 +390,14 @@ void editorProcessKeypress() {
       write(STDOUT_FILENO, "\x1b[H", 3);
 
       exit(0);
+      break;
+
+    // Cursor movement
+    case ARROW_UP:
+    case ARROW_DOWN:
+    case ARROW_LEFT:
+    case ARROW_RIGHT:
+      editorMoveCursor(c);
       break;
   }
 }
@@ -330,6 +408,9 @@ void editorProcessKeypress() {
  * @brief Initialize various properties of the editor.
  */
 void initEditor() {
+  E.cx = 0;
+  E.cy = 0;
+
   if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
 
