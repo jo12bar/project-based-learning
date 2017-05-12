@@ -7,6 +7,7 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 ## Table of Contents:
 * [C/C++](#cc)
 * [C#](#c)
+* [Clojure](#clojure)
 * [Java](#java)
 * [JavaScript](#javascript)
 * [Python](#python)
@@ -32,12 +33,17 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [Create a Blank App with C# and Xamarin (work in progress)](https://www.intertech.com/Blog/xamarin-tutorial-part-1-create-a-blank-app/)
 * [Build iOS Photo Library App with Xamarin and Visual Studio](https://www.raywenderlich.com/134049/building-ios-apps-with-xamarin-and-visual-studio)
 
+## Clojure:
+* [Build a Twitter Bot with Clojure](http://howistart.org/posts/clojure/1/index.html)
+
 ## Java:
 * [Build a Simple HTTP Server with Java](http://javarevisited.blogspot.com/2015/06/how-to-create-http-server-in-java-serversocket-example.html)
 * [Build an Android Flashlight App](https://www.youtube.com/watch?v=dhWL4DC7Krs)
 * [Build a Spring Boot App with User Authentication](https://scotch.io/tutorials/build-a-spring-boot-app-with-user-authentication)
 
 ## JavaScript:
+* [Build 30 things in 30 days with 30 tutorials](https://javascript30.com)
+
 ### Mobile Application:
 * [Build a React Native Todo Application](https://egghead.io/courses/build-a-react-native-todo-application)
 
@@ -101,8 +107,10 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [Building Go Web Applications and Microservices Using Gin](https://semaphoreci.com/community/tutorials/building-go-web-applications-and-microservices-using-gin)
 * [How to Use Godog for Behavior-driven Development in Go et started with Godog](https://semaphoreci.com/community/tutorials/how-to-use-godog-for-behavior-driven-development-in-go)
 
-## PHP
+## PHP:
 * [How To Build A Blog With Laravel](https://www.youtube.com/playlist?list=PLwAKR305CRO-Q90J---jXVzbOd4CDRbVx)
+* [Make Your Own Blog (in Pure PHP)](http://ilovephp.jondh.me.uk/en/tutorial/make-your-own-blog)
+* [Build A Real Estate Website Example with SilverStripe](https://www.silverstripe.org/learn/lessons/)
 
 ## Ruby:
 * [Build Instagram From Scratch with Ruby on Rails](https://www.dropbox.com/s/9vq430e9s3q7pu8/Let%27s%20Build%20Instagram%20with%20Ruby%20on%20Rails%20-%20Free%20Edition.pdf?dl=0)
@@ -114,8 +122,8 @@ To get started, simply fork this repo. Please refer to [CONTRIBUTING.md](CONTRIB
 * [Write Yourself a Scheme in 48 hours](https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours)
 * [Write You A Scheme, Version 2](https://github.com/write-you-a-scheme-v2/scheme)
 * [Roll Your Own IRC Bot](https://wiki.haskell.org/Roll_your_own_IRC_bot)
-* [Making a Website with Haskell](http://adit.io/posts/2013-04-15-making-a-website-with-haskell.html)
 * [Making Movie Monad](https://lettier.github.io/posts/2016-08-15-making-movie-monad.html)
+* [Making a Website with Haskell **(outdated)**](http://adit.io/posts/2013-04-15-making-a-website-with-haskell.html)
 
 ## R:
 * [Build Web Apps with Shiny](http://shiny.rstudio.com/tutorial/)
