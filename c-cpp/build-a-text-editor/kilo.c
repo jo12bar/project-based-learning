@@ -11,6 +11,8 @@
 
 /*** DEFINES ***/
 
+#define KILO_VERSION "0.0.1"
+
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 /*** DATA ***/
@@ -234,7 +236,35 @@ void editorDrawRows(struct abuf *ab) {
   int i;
 
   for (i = 0; i < E.screenrows; i++) {
-    abAppend(ab, "~", 1);
+    // Draw tildes all the way down, as well as a welcome message 1/3 of the way
+    // down.
+    if (i == E.screenrows / 3) {
+      char welcome[80];
+
+      int welcomelen = snprintf(
+        welcome,
+        sizeof(welcome),
+        "Kilo editor -- version %s",
+        KILO_VERSION
+      );
+
+      if (welcomelen > E.screencols) welcomelen = E.screencols;
+
+      // Center the greeting.
+      int padding = (E.screencols - welcomelen) / 2;
+      if (padding) {
+        abAppend(ab, "~", 1);
+        padding--;
+      }
+
+      while (padding--) {
+        abAppend(ab, " ", 1);
+      }
+
+      abAppend(ab, welcome, welcomelen);
+    } else {
+      abAppend(ab, "~", 1);
+    }
 
     // Clear the row to the right of the cursor.
     abAppend(ab, "\x1b[K", 3);
