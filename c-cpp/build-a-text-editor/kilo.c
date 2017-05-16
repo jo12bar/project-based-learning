@@ -365,8 +365,8 @@ void editorDrawRows(struct abuf *ab) {
   for (i = 0; i < E.screenrows; i++) {
     if (i >= E.numrows) {
       // Draw tildes all the way down, as well as a welcome message 1/3 of the way
-      // down.
-      if (i == E.screenrows / 3) {
+      // down (if there's no file being opened).
+      if (E.numrows == 0 && i == E.screenrows / 3) {
         char welcome[80];
 
         int welcomelen = snprintf(
