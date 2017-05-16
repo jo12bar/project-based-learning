@@ -23,6 +23,8 @@ enum editorKey {
   ARROW_RIGHT,
   ARROW_UP,
   ARROW_DOWN,
+  HOME_KEY,
+  END_KEY,
   PAGE_UP,
   PAGE_DOWN
 };
@@ -170,10 +172,14 @@ int editorReadKey() {
 
         // If there is, and it's a tilde...
         if (seq[2] == '~') {
-          // Alias to PAGE_UP & PAGE_DOWN
+          // Alias to PAGE_UP, PAGE_DOWN, HOME_KEY, & END_KEY.
           switch (seq[1]) {
+            case '1': return HOME_KEY;
+            case '4': return END_KEY;
             case '5': return PAGE_UP;
             case '6': return PAGE_DOWN;
+            case '7': return HOME_KEY;
+            case '8': return END_KEY;
           }
         }
       } else {
@@ -183,7 +189,15 @@ int editorReadKey() {
           case 'B': return ARROW_DOWN;
           case 'C': return ARROW_RIGHT;
           case 'D': return ARROW_LEFT;
+          case 'H': return HOME_KEY;
+          case 'F': return END_KEY;
         }
+      }
+    } else if (seq[0] == 'O') {
+      // Some systems use 'O' instead of '[' in some of their escape codes.
+      switch (seq[1]) {
+        case 'H': return HOME_KEY;
+        case 'F': return END_KEY;
       }
     }
 
@@ -415,6 +429,16 @@ void editorProcessKeypress() {
       write(STDOUT_FILENO, "\x1b[H", 3);
 
       exit(0);
+      break;
+
+    // <Home>
+    case HOME_KEY:
+      E.cx = 0;
+      break;
+
+    // <End>
+    case END_KEY:
+      E.cx = E.screencols - 1;
       break;
 
     // <Page Up> & <Page Down>
