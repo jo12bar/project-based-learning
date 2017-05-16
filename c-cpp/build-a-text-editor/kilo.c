@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -33,6 +34,14 @@ enum editorKey {
 /*** DATA ***/
 
 /**
+ * @brief A row of text.
+ */
+typedef struct erow {
+  int size;
+  char *chars;
+} erow;
+
+/**
  * @brief Global editor config struct.
  */
 struct editorConfig {
@@ -51,6 +60,12 @@ struct editorConfig {
    * @brief The width of the window in columns.
    */
   int screencols;
+
+  /** @brief Number of rows of text in this document. */
+  int numrows;
+
+  /** @brief Current row that the cursor is on. */
+  erow row;
 
   /**
    * @brief The original attributes for termios
@@ -255,6 +270,22 @@ int getWindowSize(int *rows, int *cols) {
   }
 }
 
+/*** FILE I/O ***/
+
+/**
+ * @brief Fake opening a file by loading "Hello, world!\0" into E.row.
+ */
+void editorOpen() {
+  char *line = "Hello, world!";
+  ssize_t linelen = 13;
+
+  E.row.size = linelen;
+  E.row.chars = malloc(linelen + 1);
+  memcpy(E.row.chars, line, linelen);
+  E.row.chars[linelen] = '\0';
+  E.numrows = 1;
+}
+
 /*** APPEND BUFFER ***/
 
 /**
@@ -310,34 +341,40 @@ void editorDrawRows(struct abuf *ab) {
   int i;
 
   for (i = 0; i < E.screenrows; i++) {
-    // Draw tildes all the way down, as well as a welcome message 1/3 of the way
-    // down.
-    if (i == E.screenrows / 3) {
-      char welcome[80];
+    if (i >= E.numrows) {
+      // Draw tildes all the way down, as well as a welcome message 1/3 of the way
+      // down.
+      if (i == E.screenrows / 3) {
+        char welcome[80];
 
-      int welcomelen = snprintf(
-        welcome,
-        sizeof(welcome),
-        "Kilo editor -- version %s",
-        KILO_VERSION
-      );
+        int welcomelen = snprintf(
+          welcome,
+          sizeof(welcome),
+          "Kilo editor -- version %s",
+          KILO_VERSION
+        );
 
-      if (welcomelen > E.screencols) welcomelen = E.screencols;
+        if (welcomelen > E.screencols) welcomelen = E.screencols;
 
-      // Center the greeting.
-      int padding = (E.screencols - welcomelen) / 2;
-      if (padding) {
+        // Center the greeting.
+        int padding = (E.screencols - welcomelen) / 2;
+        if (padding) {
+          abAppend(ab, "~", 1);
+          padding--;
+        }
+
+        while (padding--) {
+          abAppend(ab, " ", 1);
+        }
+
+        abAppend(ab, welcome, welcomelen);
+      } else {
         abAppend(ab, "~", 1);
-        padding--;
       }
-
-      while (padding--) {
-        abAppend(ab, " ", 1);
-      }
-
-      abAppend(ab, welcome, welcomelen);
     } else {
-      abAppend(ab, "~", 1);
+      int len = E.row.size;
+      if (len > E.screencols) len = E.screencols;
+      abAppend(ab, E.row.chars, len);
     }
 
     // Clear the row to the right of the cursor.
@@ -472,6 +509,7 @@ void editorProcessKeypress() {
 void initEditor() {
   E.cx = 0;
   E.cy = 0;
+  E.numrows = 0;
 
   if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
@@ -482,6 +520,7 @@ void initEditor() {
 int main() {
   enableRawMode();
   initEditor();
+  editorOpen();
 
   while (1) {
     editorRefreshScreen();
