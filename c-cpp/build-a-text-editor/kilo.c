@@ -23,6 +23,7 @@ enum editorKey {
   ARROW_RIGHT,
   ARROW_UP,
   ARROW_DOWN,
+  DEL_KEY,
   HOME_KEY,
   END_KEY,
   PAGE_UP,
@@ -172,9 +173,10 @@ int editorReadKey() {
 
         // If there is, and it's a tilde...
         if (seq[2] == '~') {
-          // Alias to PAGE_UP, PAGE_DOWN, HOME_KEY, & END_KEY.
+          // Alias to PAGE_UP, PAGE_DOWN, HOME_KEY, END_KEY, & DEL_KEY.
           switch (seq[1]) {
             case '1': return HOME_KEY;
+            case '0': return DEL_KEY;
             case '4': return END_KEY;
             case '5': return PAGE_UP;
             case '6': return PAGE_DOWN;
