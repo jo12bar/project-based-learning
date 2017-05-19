@@ -68,8 +68,8 @@ struct editorConfig {
   /** @brief Number of rows of text in this document. */
   int numrows;
 
-  /** @brief Current row that the cursor is on. */
-  erow row;
+  /** @brief Array of rows in the document. */
+  erow *row;
 
   /**
    * @brief The original attributes for termios
@@ -274,6 +274,24 @@ int getWindowSize(int *rows, int *cols) {
   }
 }
 
+/*** ROW OPERATIONS ***/
+
+/**
+ * @brief Append a row to E.row
+ * @param s String to be appended
+ * @param len Length in of the string to be appended.
+ */
+void editorAppendRow(char *s, size_t len) {
+  E.row = realloc(E.row, sizeof(erow) * (E.numrows + 1));
+
+  int at = E.numrows;
+  E.row[at].size = len;
+  E.row[at].chars = malloc(len + 1);
+  memcpy(E.row[at].chars, s, len);
+  E.row[at].chars[len] = '\0';
+  E.numrows++;
+}
+
 /*** FILE I/O ***/
 
 /**
@@ -288,20 +306,14 @@ void editorOpen(char *filename) {
   size_t linecap = 0;
   ssize_t linelen;
   
-  linelen = getline(&line, &linecap, fp);
-
-  if (linelen != 1) {
+  while ((linelen = getline(&line, &linecap, fp)) != -1) {
     while (linelen > 0 &&
         (line[linelen - 1] == '\n' || line[linelen - 1] == '\r')
     ) {
       linelen--;
     }
 
-    E.row.size = linelen;
-    E.row.chars = malloc(linelen + 1);
-    memcpy(E.row.chars, line, linelen);
-    E.row.chars[linelen] = '\0';
-    E.numrows = 1;
+    editorAppendRow(line, linelen);
   }
 
   free(line);
@@ -394,9 +406,9 @@ void editorDrawRows(struct abuf *ab) {
         abAppend(ab, "~", 1);
       }
     } else {
-      int len = E.row.size;
+      int len = E.row[i].size;
       if (len > E.screencols) len = E.screencols;
-      abAppend(ab, E.row.chars, len);
+      abAppend(ab, E.row[i].chars, len);
     }
 
     // Clear the row to the right of the cursor.
@@ -532,6 +544,7 @@ void initEditor() {
   E.cx = 0;
   E.cy = 0;
   E.numrows = 0;
+  E.row = NULL;
 
   if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
